@@ -18,3 +18,5 @@ awxkit
 jmespath
 pywinrm
 requests
+pyvmomi
+pyvim
