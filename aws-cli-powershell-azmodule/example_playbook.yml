@@ -1,0 +1,12 @@
+---
+- name: Example playbook using the custom execution environment
+  hosts: localhost
+  tasks:
+    - name: Check PowerShell version
+      ansible.builtin.command:
+        cmd: pwsh -Command "Get-Host | Select-Object -ExpandProperty Version"
+      register: powershell_version
+
+    - name: Display PowerShell version
+      ansible.builtin.debug:
+        var: powershell_version.stdout_lines

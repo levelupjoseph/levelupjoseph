@@ -1,0 +1,39 @@
+---
+version: 1
+
+build_arg_defaults:
+  EE_BASE_IMAGE: "registry.redhat.io/ansible-automation-platform-21/ee-minimal-rhel8:latest"
+
+dependencies:
+  galaxy: requirements.yml
+  python: requirements.txt
+  system: bindep.txt
+
+additional_build_steps:
+  #prepend:
+  #  - COPY ansible.cfg /etc/ansible/ansible.cfg
+  append:
+    # Install Ansible Controller Collection
+    #- COPY /tmp/ansible-controller-4.3.0.tar.gz /runner/
+    #- RUN ansible-galaxy collection install /tmp/ansible-controller-4.3.0.tar.gz
+
+    # Install PowerShell Core
+    # Register the Microsoft RedHat repository
+    - RUN curl https://packages.microsoft.com/config/rhel/8/prod.repo > /etc/yum.repos.d/microsoft.repo
+
+    # Install PowerShell Core
+    - RUN microdnf install -y powershell
+
+    # Install Azure PowerShell (Az) module
+    - RUN pwsh -Command "Install-Module -Name Az -Scope AllUsers -Force"
+
+    # Install Azure PowerShell (Az) module
+    - RUN pwsh -Command "Install-Module -Name awspowershell -Scope AllUsers -Force"
+
+    # Install AWS CLI v2
+    - RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/runner/awscliv2.zip"; unzip /runner/awscliv2.zip; cd /runner/aws; sh install
+
+    # Install Azure CLI
+    - RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc
+    - RUN sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
+    - RUN microdnf install azure-cli

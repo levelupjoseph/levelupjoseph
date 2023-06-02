@@ -1,0 +1,18 @@
+---
+collections:
+  - name: amazon.aws
+  #- name: ansible.controller
+  - name: ansible.posix
+  #- name: ansible.tower
+  - name: ansible.utils
+  - name: ansible.windows
+  - name: awx.awx
+  - name: azure.azcollection
+  - name: community.aws
+  - name: community.azure
+  - name: community.general
+  - name: community.vmware
+  - name: community.windows
+  - name: infra.controller_configuration
+  - name: microsoft.ad
+  - name: vmware.vmware_rest
