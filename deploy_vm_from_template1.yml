@@ -1,0 +1,26 @@
+---
+    - name: Deploy VM from template
+      community.vmware.vmware_guest:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        folder: "/{{ datacenter_name }}/vm/{{ folder_name }}"
+        name: "{{ vm_name }}"
+        state: poweredon
+        template: "{{ vm_template }}"
+        datacenter: "{{ datacenter_name }}"
+        cluster: "{{ cluster_name }}"
+        networks:
+          - name: "{{ network_name }}"
+            device_type: vmxnet3
+        wait_for_ip_address: yes
+      delegate_to: localhost
+      register: deploy_vm_result
+    
+    - name: Add VM to inventory
+      add_host:
+        name: "{{ deploy_vm_result.instance.hw_name }}"
+        groups:
+          - "{{ os_type }}"
+          - "{{ team_name }}"
