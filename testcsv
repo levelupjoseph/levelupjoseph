@@ -1,0 +1,14 @@
+- hosts: all
+
+  tasks:
+
+  - block:
+      - read_csv:
+          path: //Brent-IT-PC/Ansible/test.csv
+          key: vcenter
+        register: serverinfo
+      - debug:
+          var: newrelic
+    delegate_to: localhost
+  - ansible.builtin.debug:    
+    msg: 'Server Build Info {{ serverinfo.dict.dag.vcenter }} has DataCenter {{ serverinfo.dict.dag.datacenter }} and Virtual Machine Name {{ serverinfo.dict.dag.vmname }}'
